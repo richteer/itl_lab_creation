@@ -1,4 +1,4 @@
-ssh ntp linux-image-amd64 sysvinit util-linux vim screen tmux htop iftop nmon sudo nbd-client
+ssh ntp linux-image-amd64 sysvinit util-linux vim screen tmux htop iftop nmon sudo nbd-client rsync wget
 xserver-xorg
 mono-gac f-spot 
 virtualbox virt-manager 

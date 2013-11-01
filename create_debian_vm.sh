@@ -1,10 +1,14 @@
 #!/bin/bash
 #https://wiki.debian.org/Debootstrap
 
+set -e
+
 DONE=false
 
 function f_chroot() {
-        chroot $rt /bin/su -c "$stuff"
+	local stuff="/bin/su -c '$@'"
+	echo "Running $stuff"
+	bash -c "chroot $rt $stuff"
 }
 
 function conf_replace() { sed -i $1 -e "s/$2/$3/"; }
@@ -45,8 +49,6 @@ function create_debian_vm() {
 	userpass="cspassword"
 	rootpass="cspassword"
 	
-	set -e
-	
 	mount_ramfs
 	
 	
@@ -61,6 +63,7 @@ function create_debian_vm() {
 #	umount $rt/proc
 	
 #	basic_utils
+	f_chroot dpkg-reconfigure wireshark-common
 	setup_network
 	setup_secure
 	setup_chroot
