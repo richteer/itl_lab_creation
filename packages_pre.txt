@@ -1,0 +1,11 @@
+ssh ntp linux-image-amd64 sysvinit util-linux vim screen tmux htop iftop nmon sudo nbd-client
+xserver-xorg
+mono-gac f-spot 
+virtualbox virt-manager 
+xfce4 xfce4-goodies gtk2-engines-murrine slim
+gedit gedit-plugins xournal texmaker
+bsdgames armagetronad gnome-games 
+gimp inkscape dia blender xfig vlc audacity
+wireshark octave qtoctave
+ddd build-essential
+chromium  brasero cheese gtk-recordmydesktop file-roller
