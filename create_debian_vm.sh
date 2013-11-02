@@ -5,10 +5,17 @@ set -e
 
 DONE=false
 
-function f_chroot() {
+function o_chroot() {
+	
 	local stuff="/bin/su -c '$@'"
 	echo "Running $stuff"
 	bash -c "chroot $rt $stuff"
+}
+
+function f_chroot() {
+	local stuff="/bin/su -c '$@'"
+	echo "Running $stuff"
+	bash -c "systemd-nspawn -D $rt $stuff"
 }
 
 function conf_replace() { sed -i $1 -e "s/$2/$3/"; }
@@ -56,14 +63,11 @@ function create_debian_vm() {
 	setup_apt
 	setup_locale
 	
-#	mount -t proc none $rt/proc
-#	f_chroot apt-get install openjdk-6-jdk openjdk-6-jre openjdk-6-jre-headless -y
-#	f_chroot apt-get install openjdk-7-jdk -y
-#	f_chroot apt-get install mono-gac -y
-#	umount $rt/proc
-	
-#	basic_utils
+	basic_utils
+
 	f_chroot dpkg-reconfigure wireshark-common
+	f_chroot plymouth-set-default-theme spinner
+
 	setup_network
 	setup_secure
 	setup_chroot
@@ -71,6 +75,7 @@ function create_debian_vm() {
 	setup_ntp
 	setup_initramfs
 	setup_fs
+	setup_udisks
 	#todo google stuff, lxdm things 
 	#libreoffice f-spot
 	
@@ -142,17 +147,10 @@ function setup_locale() {
 }
 
 function basic_utils() {
-#	IFS="\n"
-	local packages #=$(cat packages.txt);
-	#for packages in $(cat packages.txt); do
-	while read packages; do
-		echo $packages
-		f_chroot apt-get install -y "$packages"
-		f_chroot apt-get clean
-	done < packages.txt
-	f_chroot service ssh stop
-	f_chroot service ntp stop
-#	f_chroot service exim4 stop
+	local packages=$(cat packages.txt)
+	for package in $packages; do
+		f_chroot apt-get install -y "$package"
+	done
 }
 
 function setup_network() {
@@ -193,8 +191,8 @@ function setup_users() {
 	
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"
-	echo -e "$userpass\n$userpass" | f_chroot passwd $user
-	echo -e "$rootpass\n$rootpass" | f_chroot passwd root
+	echo -e "$userpass\n$userpass" | o_chroot passwd $user
+	echo -e "$rootpass\n$rootpass" | o_chroot passwd root
 	
 	conf_replace $rt/etc/sudoers " ALL" " NOPASSWD:ALL"
 }
@@ -212,10 +210,27 @@ function setup_initramfs() {
 	cat >> $rt/etc/initramfs-tools/modules <<EOT
 tg3
 r8169
+
+intel_agp
+drm
+i915 modeset=1
+
+drm
+radeon modeset=1
 EOT
 	conf_replace $rt/etc/initramfs-tools/initramfs.conf "MODULES=most" "MODULES=netboot"
-#	rm $rt/boot/initrd*
 	f_chroot update-initramfs -uk all
+}
+
+function setup_udisks() {
+	usermod -a -G storage csguest
+	mkdir -p $rt/etc/polkit-1/localauthority/50-local.d/
+	cat > $rt/etc/polkit-1/localauthority/50-local.d/10-udisks.pkla <<EOT
+[udisks]
+Identity=unix-group:storage
+Action=org.freedesktop.udisks.drive-eject;org.freedesktop.udisks.filesystem-mount
+ResultAny=yes
+EOT
 }
 
 function setup_fs() {

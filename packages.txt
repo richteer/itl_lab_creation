@@ -1,1 +1,1 @@
-eclipse netbeans libreoffice
+eclipse netbeans libreoffice firmware-linux firmware-linux-nonfree fglrx-driver 
