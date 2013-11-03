@@ -38,7 +38,8 @@ function create_debian_vm() {
 	os_name="wheezy"
 	hostname="itl"
 	ssh_ips="128.153."
-	nfs_loc="/itl-build$$"
+	#nfs_loc="/itl-build$$"
+	nfs_loc="/itl-build_new"
 	rt=$nfs_loc
 	
 	user="csguest"
@@ -206,10 +207,10 @@ function setup_aufs() {
 PREREQ=''
 
 prereqs() {
-  echo "$PREREQ"
+  echo "\$PREREQ"
 }
 
-case $1 in
+case \$1 in
 prereqs)
   prereqs
   exit 0
@@ -220,6 +221,13 @@ esac
 manual_add_modules aufs
 manual_add_modules tmpfs
 copy_exec /bin/chmod /bin
+
+copy_exec /bin/rm /bin
+
+cp /bin/mount /bin/s_mount
+copy_exec /bin/s_mount /bin
+copy_exec /lib/x86_64-linux-gnu/libsepol.so.1 /lib/x86_64-linux-gnu/ #probably not nessesary, the copy exec function checks ldd
+copy_exec /lib/x86_64-linux-gnu/libmount.so.1 /lib/x86_64-linux-gnu/
 EOT
 
 	cat > $aufs <<EOT
@@ -228,10 +236,10 @@ EOT
 PREREQ=''
 
 prereqs() {
-  echo "$PREREQ"
+  echo "\$PREREQ"
 }
 
-case $1 in
+case \$1 in
 prereqs)
   prereqs
   exit 0
@@ -239,37 +247,37 @@ prereqs)
 esac
 
 # Boot normally when the user selects single user mode.
-if grep single /proc/cmdline >/dev/null; then
-  exit 0
-fi
+#if grep single /proc/cmdline >/dev/null; then
+#  exit 0
+#fi
 
-ro_mount_point="${rootmnt%/}.ro"
-rw_mount_point="${rootmnt%/}.rw"
+ro_mount_point="\${rootmnt%/}.ro"
+rw_mount_point="\${rootmnt%/}.rw"
 
 # Create mount points for the read-only and read/write layers:
-mkdir "${ro_mount_point}" "${rw_mount_point}"
+mkdir "\${ro_mount_point}" "\${rw_mount_point}"
 
 # Move the already-mounted root filesystem to the ro mount point:
-mount --move "${rootmnt}" "${ro_mount_point}"
+s_mount --move "\${rootmnt}" "\${ro_mount_point}"
 
 # Mount the read/write filesystem:
-mount -t tmpfs root.rw "${rw_mount_point}"
+s_mount -t tmpfs root.rw "\${rw_mount_point}"
 
 # Mount the union:
-mount -t aufs -o "dirs=${rw_mount_point}=rw:${ro_mount_point}=ro" root.union "${rootmnt}"
+s_mount -t aufs -o "dirs=\${rw_mount_point}=rw:\${ro_mount_point}=ro" root.union "\${rootmnt}"
 
 # Correct the permissions of /:
-chmod 755 "${rootmnt}"
+chmod 755 "\${rootmnt}"
 
 # Make sure the individual ro and rw mounts are accessible from within the root
 # once the union is assumed as /.  This makes it possible to access the
 # component filesystems individually.
-mkdir "${rootmnt}/ro" "${rootmnt}/rw"
-mount --move "${ro_mount_point}" "${rootmnt}/ro"
-mount --move "${rw_mount_point}" "${rootmnt}/rw"
+mkdir "\${rootmnt}/ro" "\${rootmnt}/rw"
+s_mount --move "\${ro_mount_point}" "\${rootmnt}/ro"
+s_mount --move "\${rw_mount_point}" "\${rootmnt}/rw"
 
 # Make sure checkroot.sh doesn't run.  It might fail or erroneously remount /.
-rm -f "${rootmnt}/etc/rcS.d"/S[0-9][0-9]checkroot.sh
+rm -f "\${rootmnt}/etc/rcS.d"/S[0-9][0-9]checkroot.sh
 EOT
 	chmod +x $aufs
 	chmod +x $hooks
