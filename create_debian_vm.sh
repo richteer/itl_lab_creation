@@ -29,76 +29,74 @@ function check_prog() {
         fi
 }
 
-#usage check_arg program argument
-function check_arg() {
-        local help=$($1 --help)
-        echo $help | grep $2
-        if [ $? -ne 0 ]; then
-                echo "$1 does not contain argument $2. Exiting"
-                exit -1
-        fi
-}
-
-
 function create_debian_vm() {
 	check_prog debootstrap
-	check_prog losetup
 	check_prog chroot
+	check_prog systemd-nspawn
 	
 	os_arch="amd64"
 	os_name="wheezy"
 	hostname="itl"
 	ssh_ips="128.153."
-	image_size="15"
-	image="/home/csguest/itl-image-$(date +%H-%M_%m-%d-%y).img"
+	nfs_loc="/itl-build$$"
+	rt=$nfs_loc
 	
 	user="csguest"
 	userpass="cspassword"
 	rootpass="cspassword"
 	
-	mount_ramfs
-	
-	
+	mount_archives
+
 	bootstrap
+
 	setup_apt
 	setup_locale
-	
 	basic_utils
-
 	f_chroot dpkg-reconfigure wireshark-common
 	f_chroot plymouth-set-default-theme spinner
 
 	setup_network
 	setup_secure
-	setup_chroot
+	setup_ssh
 	setup_users
 	setup_ntp
+	setup_aufs
 	setup_initramfs
 	setup_fs
 	setup_udisks
 	#todo google stuff, lxdm things 
-	#libreoffice f-spot
-	
-	f_chroot apt-get clean
 	
 	
-	create_image
+	#systemd-nspawn fix
+	umount $rt/proc/sys/fs/binfmt_misc
+	umount $rt/proc
+	
+	unmount_archives
 	
 	if [ ! -d kernel ]; then
 		mkdir kernel
 	fi
 	cp $rt/boot/* kernel/
 	
-	unmount_ramfs
-
-	DONE=true
+	echo $rt
 }
 
 function mount_ramfs() {
-	local root="/mnt/ram$$"
-	mkdir $root
-	mount -t ramfs none $root
-	export rt=$root
+	rt="/mnt/ram$$"
+	mkdir $rt
+	mount -t ramfs none $rt
+}
+
+function mount_archives() {
+	mkdir -p $rt/var/cache/apt/archives
+	if [ ! -d /tmp/archives ]; then
+		mkdir /tmp/archives
+	fi
+	mount --bind /tmp/archives $rt/var/cache/apt/archives
+}
+
+function unmount_archives() {
+	umount $rt/var/cache/apt/archives
 }
 
 function unmount_ramfs() {
@@ -114,15 +112,8 @@ function bootstrap() {
 		pkgs="$pkgs,$i"
 	done
 	
-	mkdir -p $rt/var/cache/apt/archives
-	if [ ! -d /tmp/archives ]; then
-		mkdir /tmp/archives
-	fi
-	mount --bind /tmp/archives $rt/var/cache/apt/archives
-	
 	debootstrap --include $pkgs --arch $os_arch $os_name $rt $mirror
 	
-	umount $rt/var/cache/apt/archives
 }
 
 function setup_apt() {
@@ -141,7 +132,6 @@ function setup_apt() {
 }
 
 function setup_locale() {
-	f_chroot apt-get install -y locales
 	conf_replace $rt/etc/locale.gen "# en_US.UTF-8 UTF-8" "en_US.UTF-8 UTF-8"
 	f_chroot locale-gen
 }
@@ -160,7 +150,7 @@ auto lo
 iface lo inet loopback
 
 auto eth0
-iface eth$i inet dhcp
+iface eth0 inet dhcp
   dns-nameservers 128.153.145.3 128.153.145.4
 
 EOT
@@ -175,7 +165,7 @@ function setup_secure() {
 	echo "ALL: ALL" > $rt/etc/hosts.deny
 }
 
-function setup_chroot() {
+function setup_ssh() {
 	echo "sshd: $ssh_ips" >> $rt/etc/hosts.allow
 	local sshd_config="$rt/etc/ssh/sshd_config"
 	conf_replace $sshd_config "PermitRootLogin yes" "PermitRootLogin no"
@@ -205,6 +195,86 @@ function setup_ntp() {
 	conf_replace $ntp "server 3.debian.pool.ntp.org iburst" ""
 }
 
+#http://debianaddict.com/2012/06/19/diskless-debian-linux-booting-via-dhcppxenfstftp/
+#http://www.logicsupply.com/blog/2009/01/27/how-to-build-a-read-only-linux-system/
+function setup_aufs() {
+	local aufs="$rt/etc/initramfs-tools/scripts/init-bottom/ro_root"
+	local hooks="$rt/etc/initramfs-tools/hooks/ro_root"
+	cat > $hooks <<EOT
+#!/bin/sh
+
+PREREQ=''
+
+prereqs() {
+  echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+  prereqs
+  exit 0
+  ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+manual_add_modules aufs
+manual_add_modules tmpfs
+copy_exec /bin/chmod /bin
+EOT
+
+	cat > $aufs <<EOT
+#!/bin/sh
+
+PREREQ=''
+
+prereqs() {
+  echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+  prereqs
+  exit 0
+  ;;
+esac
+
+# Boot normally when the user selects single user mode.
+if grep single /proc/cmdline >/dev/null; then
+  exit 0
+fi
+
+ro_mount_point="${rootmnt%/}.ro"
+rw_mount_point="${rootmnt%/}.rw"
+
+# Create mount points for the read-only and read/write layers:
+mkdir "${ro_mount_point}" "${rw_mount_point}"
+
+# Move the already-mounted root filesystem to the ro mount point:
+mount --move "${rootmnt}" "${ro_mount_point}"
+
+# Mount the read/write filesystem:
+mount -t tmpfs root.rw "${rw_mount_point}"
+
+# Mount the union:
+mount -t aufs -o "dirs=${rw_mount_point}=rw:${ro_mount_point}=ro" root.union "${rootmnt}"
+
+# Correct the permissions of /:
+chmod 755 "${rootmnt}"
+
+# Make sure the individual ro and rw mounts are accessible from within the root
+# once the union is assumed as /.  This makes it possible to access the
+# component filesystems individually.
+mkdir "${rootmnt}/ro" "${rootmnt}/rw"
+mount --move "${ro_mount_point}" "${rootmnt}/ro"
+mount --move "${rw_mount_point}" "${rootmnt}/rw"
+
+# Make sure checkroot.sh doesn't run.  It might fail or erroneously remount /.
+rm -f "${rootmnt}/etc/rcS.d"/S[0-9][0-9]checkroot.sh
+EOT
+	chmod +x $aufs
+	chmod +x $hooks
+}
+
 function setup_initramfs() {
 	echo "Generating initramfs"
 	cat >> $rt/etc/initramfs-tools/modules <<EOT
@@ -217,6 +287,8 @@ i915 modeset=1
 
 drm
 radeon modeset=1
+
+aufs
 EOT
 	conf_replace $rt/etc/initramfs-tools/initramfs.conf "MODULES=most" "MODULES=netboot"
 	f_chroot update-initramfs -uk all
@@ -236,47 +308,8 @@ EOT
 function setup_fs() {
 	cat > $rt/etc/fstab <<EOT
 #/dev/sda1	none	swap	defaults		0 0
-/dev/nbd0	/	ext4	defaults,relatime	0 2
+#/dev/nbd0	/	ext4	defaults,relatime	0 2
 EOT
-}
-
-function setup_img() {
-	losetup -f $image
-	losetup -j $image | sed -e 's/:[^@]*$//'
-}
-
-function disconnect_img() {
-	local loop=$1
-	
-	umount ${loop}
-	losetup -d $loop
-}
-
-function format_mount_img() {
-	local loop=$1
-	local dest=$2
-	
-	mkfs.ext4 $loop
-	mount $loop $dest
-}
-
-function create_image() {
-	if [ -f $image ]; then
-		echo "IMAGE EXISTS REMOVING"
-		rm $image
-	fi
-	
-	truncate -s ${image_size}GB $image
-	
-	local loop=$(setup_img $image)
-	local dest="/mnt/tmp$$"
-	mkdir $dest
-	format_mount_img $loop $dest
-	
-	cp -rp $rt/* $dest
-	
-	disconnect_img $loop
-	rmdir $dest
 }
 
 create_debian_vm

@@ -1,16 +1,14 @@
-ssh ntp linux-image-amd64 sysvinit util-linux vim screen tmux htop iftop nmon sudo nbd-client rsync wget
-xserver-xorg
-mono-gac f-spot 
+ssh ntp linux-image-amd64 sysvinit util-linux screen tmux htop iftop nmon sudo nbd-client rsync wget xserver-xorg
 virtualbox virt-manager kvm qemu
 xfce4 xfce4-goodies gtk2-engines-murrine slim
-gedit gedit-plugins xournal texmaker vim
+gedit gedit-plugins xournal texmaker vim emacs vim-latexsuite
 bsdgames armagetronad gnome-games 
-gimp inkscape dia blender xfig vlc audacity
+gimp inkscape dia blender xfig vlc audacity f-spot totem evince
 wireshark octave qtoctave
-ddd build-essential
 chromium  brasero cheese gtk-recordmydesktop file-roller
-alsa-utils bc codeblocks curl ddd freeglut3-dev gstreamer0.10-plugins-good hicolor-icon-theme nmap
+alsa-utils bc codeblocks curl ddd freeglut3 freeglut3-dev gstreamer0.10-plugins-good hicolor-icon-theme nmap
 git subversion mercurial
 plymouth plymouth-themes-all
-
-
+gcalctool ghex mysql-workbench cowsay traceroute sqlite3 imagemagick mysql-client xchat bzip2 gnuplot
+llvm clang libopenmpi-dev ddd build-essential valgrind libntl-dev m4 flex bison python-numpy cmake libboost-all-dev clisp libtool
+aufs-tools
