@@ -1,4 +1,4 @@
-ssh ntp linux-image-amd64 sysvinit util-linux screen tmux htop iftop nmon sudo nbd-client rsync wget xserver-xorg
+ssh ntp linux-image-amd64 sysvinit util-linux screen tmux htop iftop nmon sudo nbd-client rsync wget xserver-xorg less
 virtualbox virt-manager kvm qemu
 xfce4 xfce4-goodies gtk2-engines-murrine slim
 gedit gedit-plugins xournal texmaker vim emacs vim-latexsuite
