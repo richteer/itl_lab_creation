@@ -39,7 +39,7 @@ function create_debian_vm() {
 	hostname="itl"
 	ssh_ips="128.153."
 	#nfs_loc="/itl-build$$"
-	nfs_loc="/itl-build_new"
+	nfs_loc="/itl-build"
 	rt=$nfs_loc
 	
 	user="csguest"
@@ -67,17 +67,14 @@ function create_debian_vm() {
 	setup_udisks
 	#todo google stuff, lxdm things 
 	
+	f_chroot update-rc.d slim disable 2
+
 	
 	#systemd-nspawn fix
 	umount $rt/proc/sys/fs/binfmt_misc
 	umount $rt/proc
 	
 	unmount_archives
-	
-	if [ ! -d kernel ]; then
-		mkdir kernel
-	fi
-	cp $rt/boot/* kernel/
 	
 	echo $rt
 }
@@ -156,7 +153,7 @@ iface eth0 inet dhcp
 
 EOT
 	echo $hostname > $rt/etc/hostname
-	
+	echo "127.0.0.1 itl" >> $rt/etc/hosts
 #	echo "$ip $hostname $vm_name.cslabs $vm_name" >> $rt/etc/hosts
 }
 
@@ -180,6 +177,9 @@ function setup_users() {
 	
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
+
+	tar -xf ./skel.tar.gz -C $rt/etc/skel/
+
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"
 	echo -e "$userpass\n$userpass" | o_chroot passwd $user
