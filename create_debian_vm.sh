@@ -38,8 +38,8 @@ function create_debian_vm() {
 	os_name="wheezy"
 	hostname="itl"
 	ssh_ips="128.153."
-	#nfs_loc="/itl-build$$"
-	nfs_loc="/itl-build"
+	nfs_loc="/itl-build$$"
+	#nfs_loc="/itl-build"
 	rt=$nfs_loc
 	
 	user="csguest"
@@ -122,6 +122,11 @@ function setup_apt() {
 	add_repo "http://mirror.clarkson.edu/debian/" "" "main contrib non-free"
 	add_repo "http://security.debian.org/" "/updates" "main contrib"
 	add_repo "http://mirror.clarkson.edu/debian/" "-updates" "main"
+	echo "deb http://mirror.clarkson.edu/linuxmint/packages debian main import" >> $sources
+	f_chroot "gpg --keyserver pgp.mit.edu --recv-keys 3EE67F3D0FF405B2"
+	f_chroot "gpg --export 3EE67F3D0FF405B2 > 3EE67F3D0FF405B2.gpg"
+	f_chroot "apt-key add ./3EE67F3D0FF405B2.gpg"
+	f_chroot "rm ./3EE67F3D0FF405B2.gpg"
 	
 	echo 'APT::Get::Install-Recommends "false";' > $rt/etc/apt/apt.conf
 	
@@ -135,6 +140,7 @@ function setup_locale() {
 }
 
 function basic_utils() {
+	f_chroot "ln -s /proc/self/fd /dev/fd; apt-get install virtualbox-dkms -y"
 	local packages=$(cat packages.txt)
 	for package in $packages; do
 		f_chroot apt-get install -y "$package"
@@ -182,6 +188,9 @@ function setup_users() {
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"
+	f_chroot "usermod -a -G libvirt $user"
+	f_chroot "usermod -a -G libvirt-qemu $user"
+	f_chroot "usermod -a -G vboxusers $user"
 	echo -e "$userpass\n$userpass" | o_chroot passwd $user
 	echo -e "$rootpass\n$rootpass" | o_chroot passwd root
 	
