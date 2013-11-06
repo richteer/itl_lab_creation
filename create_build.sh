@@ -65,6 +65,7 @@ function create_debian_vm() {
 	setup_initramfs
 	setup_fs
 	setup_udisks
+	setup_misc
 	#todo google stuff, lxdm things 
 	
 	f_chroot update-rc.d slim disable 2
@@ -195,6 +196,9 @@ function setup_users() {
 	echo -e "$rootpass\n$rootpass" | o_chroot passwd root
 	
 	conf_replace $rt/etc/sudoers " ALL" " NOPASSWD:ALL"
+	
+	echo "default_user	csguest" >> $rt/etc/slim.conf
+	echo "auto_login		yes" >> $rt/etc/slim.conf
 }
 
 function setup_ntp() {
@@ -327,6 +331,11 @@ function setup_fs() {
 #/dev/sda1	none	swap	defaults		0 0
 #/dev/nbd0	/	ext4	defaults,relatime	0 2
 EOT
+}
+
+function setup_misc() {
+	rm $rt/opt/firefox/browser/searchplugins/*
+	cp misc/google.xml $rt/opt/firefox/browser/searchplugins/
 }
 
 create_debian_vm
