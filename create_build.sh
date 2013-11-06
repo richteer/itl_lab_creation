@@ -184,8 +184,7 @@ function setup_users() {
 	
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
-
-	tar -xf ./skel.tar.gz -C $rt/etc/skel/
+	cp skel/* $rt/etc/skel/
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"

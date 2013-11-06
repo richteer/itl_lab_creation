@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-desktop" version="1.0">
+  <property name="backdrop" type="empty">
+    <property name="screen0" type="empty">
+      <property name="monitor0" type="empty">
+        <property name="image-path" type="string" value="/home/csguest/.background.png"/>
+        <property name="last-image" type="string" value="/usr/share/xfce4/backdrops/xfce4logo.png"/>
+        <property name="last-single-image" type="string" value="/home/csguest/.background.png"/>
+        <property name="image-style" type="int" value="3"/>
+        <property name="color1" type="array">
+          <value type="uint" value="5397"/>
+          <value type="uint" value="8738"/>
+          <value type="uint" value="13107"/>
+          <value type="uint" value="65535"/>
+        </property>
+      </property>
+    </property>
+  </property>
+</channel>

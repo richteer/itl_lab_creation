@@ -1,0 +1,9 @@
+#QtOctave local configuration.
+ide_command_color=lightGray
+lines_in_terminal=1000
+navigator_start_path=/home/csguest
+show_ide_commands=false
+terminal_background_color=White
+terminal_error_color=Red
+terminal_font=Liberation Mono
+terminal_foreground_color=Black
