@@ -6,7 +6,7 @@ bsdgames armagetronad gnome-games
 gimp inkscape dia blender xfig vlc audacity f-spot totem evince
 wireshark octave qtoctave
 chromium  brasero cheese gtk-recordmydesktop file-roller
-alsa-utils bc codeblocks curl ddd freeglut3 freeglut3-dev gstreamer0.10-plugins-good hicolor-icon-theme nmap
+alsa-utils bc codeblocks curl ddd freeglut3 freeglut3-dev gstreamer0.10-plugins-good hicolor-icon-theme nmap unzip
 git subversion mercurial
 plymouth plymouth-themes-all
 gcalctool ghex mysql-workbench cowsay traceroute sqlite3 imagemagick mysql-client xchat bzip2 gnuplot
