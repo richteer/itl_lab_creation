@@ -2,9 +2,6 @@
 #https://wiki.debian.org/Debootstrap
 #theme from https://github.com/duskp/numix-holo
 
-set -e
-
-DONE=false
 
 function o_chroot() {
 	
@@ -30,10 +27,12 @@ function check_prog() {
         fi
 }
 
-function create_debian_vm() {
+function create_build() {
 	check_prog debootstrap
 	check_prog chroot
 	check_prog systemd-nspawn
+
+	set -e
 	
 	os_arch="amd64"
 	os_name="wheezy"
@@ -42,6 +41,8 @@ function create_debian_vm() {
 	nfs_loc="/itl-build$$"
 	#nfs_loc="/itl-build"
 	rt=$nfs_loc
+
+	echo "Starting build in $rt"
 	
 	user="csguest"
 	userpass="cspassword"
@@ -339,4 +340,4 @@ function setup_misc() {
 	cp misc/google.xml $rt/opt/firefox/browser/searchplugins/
 }
 
-create_debian_vm
+create_build
