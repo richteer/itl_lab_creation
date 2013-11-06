@@ -207,6 +207,7 @@ function setup_ntp() {
 	conf_replace $ntp "server 1.debian.pool.ntp.org iburst" "server tock.clarkson.edu"
 	conf_replace $ntp "server 2.debian.pool.ntp.org iburst" ""
 	conf_replace $ntp "server 3.debian.pool.ntp.org iburst" ""
+	cp $rt/usr/share/zoneinfo/America/New_York $rt/etc/localtime
 }
 
 #http://debianaddict.com/2012/06/19/diskless-debian-linux-booting-via-dhcppxenfstftp/
