@@ -240,8 +240,8 @@ copy_exec /bin/chmod /bin
 copy_exec /bin/rm /bin
 
 
-function copy_lib() {
-	cp /lib/x86_64-linux-gnu/$1 /lib/x86_64-linux-gnu/
+copy_lib() {
+	cp /lib/x86_64-linux-gnu/\$1 /lib/x86_64-linux-gnu/
 }
 
 copy_exec /usr/bin/free /bin
