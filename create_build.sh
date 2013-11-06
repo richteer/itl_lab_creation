@@ -72,14 +72,14 @@ function create_build() {
 	
 	f_chroot update-rc.d slim disable 2
 
+	echo $rt
 	
 	#systemd-nspawn fix
-	umount $rt/proc/sys/fs/binfmt_misc
-	umount $rt/proc
+#	umount $rt/proc/sys/fs/binfmt_misc
+#	umount $rt/proc
+#	
+#	unmount_archives
 	
-	unmount_archives
-	
-	echo $rt
 }
 
 function mount_ramfs() {
@@ -241,7 +241,7 @@ copy_exec /bin/rm /bin
 
 
 copy_lib() {
-	cp /lib/x86_64-linux-gnu/\$1 /lib/x86_64-linux-gnu/
+	copy_exec /lib/x86_64-linux-gnu/\$1 /lib/x86_64-linux-gnu/
 }
 
 copy_exec /usr/bin/free /bin
@@ -331,7 +331,8 @@ EOT
 }
 
 function setup_udisks() {
-	usermod -a -G storage csguest
+	f_chroot groupadd storage
+	f_chroot usermod -a -G storage csguest
 	mkdir -p $rt/etc/polkit-1/localauthority/50-local.d/
 	cat > $rt/etc/polkit-1/localauthority/50-local.d/10-udisks.pkla <<EOT
 [udisks]
@@ -352,5 +353,15 @@ function setup_misc() {
 	rm $rt/opt/firefox/browser/searchplugins/*
 	cp misc/google.xml $rt/opt/firefox/browser/searchplugins/
 }
+
+
+function exit_func() {
+	umount $rt/proc/sys/fs/binfmt_misc
+	umount $rt/proc
+	
+	unmount_archives
+}
+
+trap exit_func EXIT
 
 create_build
