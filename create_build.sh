@@ -186,7 +186,7 @@ function setup_users() {
 	
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
-	cp skel/* $rt/etc/skel/
+	cp -r skel/* $rt/etc/skel/
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"
@@ -239,10 +239,20 @@ copy_exec /bin/chmod /bin
 
 copy_exec /bin/rm /bin
 
+
+function copy_lib() {
+	cp /lib/x86_64-linux-gnu/$1 /lib/x86_64-linux-gnu/
+}
+
+copy_exec /usr/bin/free /bin
+copy_lib libprocps.so.0
+
+copy_exec /bin/grep /bin
+
 cp /bin/mount /bin/s_mount
 copy_exec /bin/s_mount /bin
-copy_exec /lib/x86_64-linux-gnu/libsepol.so.1 /lib/x86_64-linux-gnu/ #probably not nessesary, the copy exec function checks ldd
-copy_exec /lib/x86_64-linux-gnu/libmount.so.1 /lib/x86_64-linux-gnu/
+copy_lib libsepol.so.1
+copy_lib libmount.so.1
 EOT
 
 	cat > $aufs <<EOT
@@ -277,6 +287,9 @@ s_mount --move "\${rootmnt}" "\${ro_mount_point}"
 
 # Mount the read/write filesystem:
 s_mount -t tmpfs root.rw "\${rw_mount_point}"
+size=\$(free -tm | grep Total | awk '{ print \$2"M"}')
+s_mount -t tmpfs -o size=\$size tmpfs /rw/
+
 
 # Mount the union:
 s_mount -t aufs -o "dirs=\${rw_mount_point}=rw:\${ro_mount_point}=ro" root.union "\${rootmnt}"
