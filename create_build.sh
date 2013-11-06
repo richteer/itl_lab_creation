@@ -1,5 +1,6 @@
 #!/bin/bash
 #https://wiki.debian.org/Debootstrap
+#theme from https://github.com/duskp/numix-holo
 
 set -e
 
