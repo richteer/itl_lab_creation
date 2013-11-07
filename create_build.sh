@@ -35,11 +35,11 @@ function create_build() {
 	set -e
 	
 	os_arch="amd64"
-	os_name="wheezy"
+	os_name="jessie"
 	hostname="itl"
 	ssh_ips="128.153."
-	nfs_loc="/itl-build$$"
-	#nfs_loc="/itl-build"
+	#nfs_loc="/itl-build$$"
+	nfs_loc="/itl-build"
 	rt=$nfs_loc
 
 	echo "Starting build in $rt"
@@ -186,7 +186,9 @@ function setup_users() {
 	
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
-	cp -r skel/* $rt/etc/skel/
+	echo "Before"
+	strace cp -rv skel $rt/etc/
+	echo "After"
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"
@@ -306,6 +308,8 @@ s_mount --move "\${rw_mount_point}" "\${rootmnt}/rw"
 
 # Make sure checkroot.sh doesn't run.  It might fail or erroneously remount /.
 rm -f "\${rootmnt}/etc/rcS.d"/S[0-9][0-9]checkroot.sh
+
+sleep 2
 EOT
 	chmod +x $aufs
 	chmod +x $hooks
@@ -356,10 +360,9 @@ function setup_misc() {
 
 
 function exit_func() {
+	unmount_archives
 	umount $rt/proc/sys/fs/binfmt_misc
 	umount $rt/proc
-	
-	unmount_archives
 }
 
 trap exit_func EXIT

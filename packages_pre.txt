@@ -1,5 +1,5 @@
 ssh ntp linux-image-amd64 sysvinit util-linux screen tmux htop iftop nmon sudo rsync wget xserver-xorg less
-virtualbox virt-manager kvm qemu libvirt-bin
+virt-manager kvm qemu libvirt-bin
 xfce4 xfce4-goodies gtk2-engines-murrine slim
 gedit gedit-plugins xournal texmaker vim emacs vim-latexsuite
 bsdgames armagetronad gnome-games 
@@ -13,3 +13,5 @@ gcalctool ghex mysql-workbench cowsay traceroute sqlite3 imagemagick mysql-clien
 llvm clang libopenmpi-dev ddd build-essential valgrind libntl-dev m4 flex bison python-numpy cmake libboost-all-dev clisp libtool
 aufs-tools
 systemd
+libva-intel-vaapi-driver libva-intel-vaapi-driver libgl1-mesa-dri
+strace

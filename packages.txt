@@ -1,2 +1,2 @@
 eclipse netbeans libreoffice firmware-linux firmware-linux-nonfree ocaml libcv-dev virtualbox-dkms flashplugin-nonfree
-firefox firefox-l10n-en-us virtualbox-qt mint-x-icons
+firefox firefox-l10n-en-us virtualbox-qt mint-x-icons debootstrap
