@@ -38,8 +38,8 @@ function create_build() {
 	os_name="jessie"
 	hostname="itl"
 	ssh_ips="128.153."
-	#nfs_loc="/itl-build$$"
-	nfs_loc="/itl-build"
+	#rt="/itl-build$$"
+	rt="/itl-build"
 	rt=$nfs_loc
 
 	echo "Starting build in $rt"
