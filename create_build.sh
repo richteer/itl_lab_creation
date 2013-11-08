@@ -56,6 +56,7 @@ function create_build() {
 	basic_utils
 	f_chroot dpkg-reconfigure wireshark-common
 	f_chroot plymouth-set-default-theme spinner
+	setup_vmware
 
 	setup_network
 	setup_secure
@@ -358,6 +359,12 @@ EOT
 function setup_misc() {
 	rm $rt/opt/firefox/browser/searchplugins/*
 	cp misc/google.xml $rt/opt/firefox/browser/searchplugins/
+}
+
+function setup_vmware() {
+	f_chroot "wget https://download3.vmware.com/software/player/file/VMware-Player-6.0.1-1379776.x86_64.bundle"
+	f_chroot "chroot +x chmod +x VMware-Player-6.0.1-1379776.x86_64.bundle"
+	f_chroot "./VMware-Player-6.0.1-1379776.x86_64.bundle  --console --eulas-agreed --required"
 }
 
 
