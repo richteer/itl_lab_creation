@@ -186,7 +186,7 @@ function setup_users() {
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
 	echo "Before"
-	Cp -rv skel/.* $rt/etc/skel/
+	cp -rv skel/.* $rt/etc/skel/
 	echo "After"
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
