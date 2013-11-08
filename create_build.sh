@@ -186,7 +186,7 @@ function setup_users() {
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
 	echo "Before"
-	cp -rv skel/.* $rt/etc/skel/
+#	cp -rv skel/.* $rt/etc/skel/
 	echo "After"
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
@@ -244,6 +244,9 @@ copy_exec /bin/rm /bin
 copy_lib() {
 	copy_exec /lib/x86_64-linux-gnu/\$1 /lib/x86_64-linux-gnu/
 }
+
+copy_lib libm.so.6
+copy_exec /usr/bin/awk /bin
 
 copy_exec /usr/bin/free /bin
 copy_lib libprocps.so.0
