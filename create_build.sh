@@ -187,7 +187,7 @@ function setup_users() {
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
 	echo "Before"
-	strace cp -rv skel $rt/etc/
+#	strace cp -rv skel $rt/etc/
 	echo "After"
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
@@ -288,9 +288,9 @@ mkdir "\${ro_mount_point}" "\${rw_mount_point}"
 s_mount --move "\${rootmnt}" "\${ro_mount_point}"
 
 # Mount the read/write filesystem:
-s_mount -t tmpfs root.rw "\${rw_mount_point}"
 size=\$(free -tm | grep Total | awk '{ print \$2"M"}')
-s_mount -t tmpfs -o size=\$size tmpfs /rw/
+s_mount -t tmpfs -o size=\$size root.rw "\${rw_mount_point}"
+#s_mount -t tmpfs -o size=\$size tmpfs /rw/
 
 
 # Mount the union:
@@ -309,7 +309,7 @@ s_mount --move "\${rw_mount_point}" "\${rootmnt}/rw"
 # Make sure checkroot.sh doesn't run.  It might fail or erroneously remount /.
 rm -f "\${rootmnt}/etc/rcS.d"/S[0-9][0-9]checkroot.sh
 
-sleep 2
+sleep 10
 EOT
 	chmod +x $aufs
 	chmod +x $hooks
