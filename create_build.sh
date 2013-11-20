@@ -313,7 +313,7 @@ s_mount --move "\${rw_mount_point}" "\${rootmnt}/rw"
 # Make sure checkroot.sh doesn't run.  It might fail or erroneously remount /.
 rm -f "\${rootmnt}/etc/rcS.d"/S[0-9][0-9]checkroot.sh
 
-sleep 10
+#sleep 10
 EOT
 	chmod +x $aufs
 	chmod +x $hooks
