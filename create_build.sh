@@ -33,6 +33,7 @@ function create_build() {
 	check_prog systemd-nspawn
 
 	set -e
+	set -x
 	
 	os_arch="amd64"
 	os_name="jessie"
@@ -187,7 +188,7 @@ function setup_users() {
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
 	echo "Before"
-#	cp -rv skel/.* $rt/etc/skel/
+	cp -rv ./skel $rt/etc/
 	echo "After"
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
@@ -362,9 +363,13 @@ function setup_misc() {
 }
 
 function setup_vmware() {
-	f_chroot "wget https://download3.vmware.com/software/player/file/VMware-Player-6.0.1-1379776.x86_64.bundle"
-	f_chroot "chroot +x chmod +x VMware-Player-6.0.1-1379776.x86_64.bundle"
-	f_chroot "./VMware-Player-6.0.1-1379776.x86_64.bundle  --console --eulas-agreed --required"
+	local file="VMware-Player-6.0.1-1379776.x86_64.bundle"
+	if ! [ -f ./misc/$file ]; then
+		wget https://download3.vmware.com/software/player/file/$file -O ./misc/$file
+	fi
+	cp ./misc/$file $rt/$file
+	f_chroot "chmod +x VMware-Player-6.0.1-1379776.x86_64.bundle"
+	o_chroot "./VMware-Player-6.0.1-1379776.x86_64.bundle  --console --eulas-agreed --required"
 }
 
 
