@@ -203,6 +203,8 @@ function setup_users() {
 	
 	echo "default_user	csguest" >> $rt/etc/slim.conf
 	echo "auto_login		yes" >> $rt/etc/slim.conf
+	
+	f_chroot "su -c \"gimp --no-interface --batch '(gimp-quit 0)'\""
 }
 
 function setup_ntp() {
