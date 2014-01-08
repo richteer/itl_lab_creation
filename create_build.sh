@@ -165,6 +165,8 @@ EOT
 	echo $hostname > $rt/etc/hostname
 	echo "127.0.0.1 itl" >> $rt/etc/hosts
 #	echo "$ip $hostname $vm_name.cslabs $vm_name" >> $rt/etc/hosts
+	echo "broadcom" >> $rt/etc/modules-load.d/modules.conf
+	echo "tg3" >> $rt/etc/modules-load.d/modules.conf
 }
 
 #TODO iptables
