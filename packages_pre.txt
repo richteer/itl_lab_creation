@@ -1,5 +1,5 @@
 ssh ntp linux-image-amd64 sysvinit util-linux screen tmux htop iftop nmon sudo rsync wget xserver-xorg less
-virt-manager kvm qemu libvirt-bin
+virt-manager qemu-kvm qemu libvirt-bin
 xfce4 xfce4-goodies gtk2-engines-murrine slim gtk3-engines-xfce
 gedit gedit-plugins xournal texmaker vim emacs vim-latexsuite
 bsdgames armagetronad gnome-games 

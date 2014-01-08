@@ -33,7 +33,6 @@ function create_build() {
 	check_prog systemd-nspawn
 
 	set -e
-	set -x
 	
 	os_arch="amd64"
 	os_name="jessie"
@@ -190,7 +189,9 @@ function setup_users() {
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
 	
 	echo "Before"
+	set +e
 	cp -rv ./skel $rt/etc/
+	set -e
 	echo "After"
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
@@ -206,7 +207,7 @@ function setup_users() {
 	echo "default_user	csguest" >> $rt/etc/slim.conf
 	echo "auto_login		yes" >> $rt/etc/slim.conf
 	
-	f_chroot "su -c \"gimp --no-interface --batch '(gimp-quit 0)'\""
+#	f_chroot "su -c \"gimp --no-interface --batch \\'(gimp-quit 0)\\'\""
 	echo 'find /.home/csguest -iname ".*" -maxdepth 1 -delete' >> $rt/home/csguest/.profile
 }
 
