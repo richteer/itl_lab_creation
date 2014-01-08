@@ -205,6 +205,7 @@ function setup_users() {
 	echo "auto_login		yes" >> $rt/etc/slim.conf
 	
 	f_chroot "su -c \"gimp --no-interface --batch '(gimp-quit 0)'\""
+	echo 'find /.home/csguest -iname ".*" -maxdepth 1 -delete' >> $rt/home/csguest/.profile
 }
 
 function setup_ntp() {
@@ -353,9 +354,12 @@ EOT
 }
 
 function setup_fs() {
+	mkdir $rt/storage
+	mkdir $rt/.home
 	cat > $rt/etc/fstab <<EOT
-#/dev/sda1	none	swap	defaults		0 0
-#/dev/nbd0	/	ext4	defaults,relatime	0 2
+/dev/sda3       /storage        ntfs    defaults,force,nofail           0 0                                                                                                                                    
+/dev/sda4       /.home  ext4    defaults,nofail                 0 1                                                                                                                                            
+none            /home   aufs    dirs=/.home=rw:/ro/home/=ro     0 0    
 EOT
 }
 
