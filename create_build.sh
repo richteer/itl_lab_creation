@@ -166,6 +166,7 @@ EOT
 #	echo "$ip $hostname $vm_name.cslabs $vm_name" >> $rt/etc/hosts
 	echo "broadcom" >> $rt/etc/modules-load.d/modules.conf
 	echo "tg3" >> $rt/etc/modules-load.d/modules.conf
+	sed -i $rt/etc/init.d/networking -e "1s/^/exit 0"
 }
 
 #TODO iptables
