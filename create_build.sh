@@ -208,7 +208,7 @@ function setup_users() {
 	echo "auto_login		yes" >> $rt/etc/slim.conf
 	
 #	f_chroot "su -c \"gimp --no-interface --batch \\'(gimp-quit 0)\\'\""
-	echo 'find /.home/csguest -iname ".*" -maxdepth 1 -delete' >> $rt/home/csguest/.profile
+	echo 'find /.home/csguest -iname ".*" -maxdepth 1 -exec rm -rf {} \;' >> $rt/home/csguest/.profile
 }
 
 function setup_ntp() {
