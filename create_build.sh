@@ -360,9 +360,15 @@ function setup_fs() {
 	mkdir $rt/storage
 	mkdir $rt/.home
 	cat > $rt/etc/fstab <<EOT
-/dev/sda3       /storage        ntfs    defaults,force,nofail           0 0                                                                                                                                    
-/dev/sda4       /.home  ext4    defaults,nofail                 0 1                                                                                                                                            
-none            /home   aufs    dirs=/.home=rw:/ro/home/=ro     0 0    
+/dev/sda3	/storage  	ntfs	defaults,force,nofail,noauto			0 0													
+/dev/sda4	/.home  	ext4	defaults,nofail,noauto				0 1													  
+none		/home		aufs	dirs=/.home=rw:/ro/home/=ro,nofail,noauto	0 0
+EOT
+	cat > $rt/etc/rc.local <<EOT
+mount /storage
+mount /.home
+mount /home
+exit 0
 EOT
 }
 
