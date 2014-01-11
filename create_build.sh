@@ -385,7 +385,8 @@ function setup_vmware() {
 	fi
 	cp ./misc/$file $rt/$file
 	f_chroot "chmod +x VMware-Player-6.0.1-1379776.x86_64.bundle"
-	o_chroot "./VMware-Player-6.0.1-1379776.x86_64.bundle  --console --eulas-agreed --required"
+	o_chroot "./$file  --console --eulas-agreed --required"
+	rm $rt/$file
 }
 
 
