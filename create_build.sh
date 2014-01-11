@@ -197,6 +197,10 @@ function setup_users() {
 
 	f_chroot "useradd -m $user -G sudo -s /bin/bash"
 	f_chroot "usermod -a -G wireshark $user"
+	f_chroot "usermod -a -G audio $user"
+	f_chroot "usermod -a -G fuse $user"
+	f_chroot "usermod -a -G games $user"
+	f_chroot "usermod -a -G kvm $user"
 	f_chroot "usermod -a -G libvirt $user"
 	f_chroot "usermod -a -G libvirt-qemu $user"
 	f_chroot "usermod -a -G vboxusers $user"
