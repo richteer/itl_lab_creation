@@ -366,9 +366,9 @@ function setup_fs() {
 none		/home		aufs	dirs=/.home=rw:/ro/home/=ro,noauto	0 0
 EOT
 	cat > $rt/etc/rc.local <<EOT
-mount /storage
 mount /.home
 mount /home
+mount /storage #Allways do storage last, least important
 exit 0
 EOT
 }
