@@ -361,7 +361,7 @@ function setup_fs() {
 	mkdir $rt/storage
 	mkdir $rt/.home
 	cat > $rt/etc/fstab <<EOT
-/dev/sda3	/storage  	ntfs	defaults,force,noauto			0 0													
+/dev/sda3	/storage  	ntfs	defaults,noauto			0 0													
 /dev/sda4	/.home  	ext4	defaults,noauto				0 1													  
 none		/home		aufs	dirs=/.home=rw:/ro/home/=ro,noauto	0 0
 EOT
