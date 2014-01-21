@@ -1,17 +1,112 @@
-ssh ntp linux-image-amd64 sysvinit util-linux screen tmux htop iftop nmon sudo rsync wget xserver-xorg less
-virt-manager qemu-kvm qemu libvirt-bin
-xfce4 xfce4-goodies gtk2-engines-murrine slim gtk3-engines-xfce
-gedit gedit-plugins xournal texmaker vim emacs vim-latexsuite
-bsdgames armagetronad gnome-games 
-gimp inkscape dia blender xfig vlc audacity f-spot totem evince
-wireshark octave qtoctave
-chromium  brasero cheese gtk-recordmydesktop file-roller
-alsa-utils bc codeblocks curl ddd freeglut3 freeglut3-dev gstreamer0.10-plugins-good hicolor-icon-theme nmap unzip
-git subversion mercurial
-plymouth plymouth-themes-all
-gcalctool ghex mysql-workbench cowsay traceroute sqlite3 imagemagick mysql-client xchat bzip2 gnuplot
-llvm clang libopenmpi-dev ddd build-essential valgrind libntl-dev m4 flex bison python-numpy cmake libboost-all-dev clisp libtool
+alsa-utils
+armagetronad
+audacity
 aufs-tools
-systemd
-libva-intel-vaapi-driver libva-intel-vaapi-driver libgl1-mesa-dri
+bc
+beep
+bison
+blender
+brasero
+bsdgames
+build-essential
+bzip2
+cheese
+chromium
+clang
+clisp
+cmake
+codeblocks
+cowsay
+curl
+ddd
+ddd
+dia
+dmenu
+emacs
+evince
+f-spot
+file-roller
+flex
+freeglut3
+freeglut3-dev
+gcalctool
+gdb
+gedit
+gedit-plugins
+ghex
+gimp
+git
+gnome-games
+gnuplot
+gstreamer0.10-plugins-good
+gtk-recordmydesktop
+gtk2-engines-murrine
+gtk3-engines-xfce
+hicolor-icon-theme
+htop
+iftop
+imagemagick
+inkscape
+less
+libboost-all-dev
+libgl1-mesa-dri
+libglew-dev
+libglfw-dev
+libglm-dev
+libglm-dev
+libntl-dev
+libopenmpi-dev
+libsdl2-dev
+libtool
+libva-intel-vaapi-driver
+libva-intel-vaapi-driver
+libvirt-bin
+linux-image-amd64
+llvm
+m4
+mercurial
+mit-scheme
+mysql-client
+mysql-workbench
+nmap
+nmon
+ntp
+octave
+plymouth
+plymouth-themes-all
+python-numpy
+qemu
+qemu-kvm
+qtoctave
+racket
+rsync
+screen
+slim
+sqlite3
+ssh
 strace
+subversion
+sudo
+systemd
+sysvinit
+telnet
+texmaker
+tmux
+totem
+traceroute
+unzip
+util-linux
+valgrind
+vim
+vim-latexsuite
+virt-manager
+vlc
+wget
+wireshark
+xchat
+xfce4
+xfce4-goodies
+xfig
+xournal
+xserver-xorg
+xterm
