@@ -21,7 +21,6 @@ curl
 ddd
 ddd
 dia
-dmenu
 emacs
 evince
 f-spot
