@@ -51,6 +51,7 @@ less
 libboost-all-dev
 libgl1-mesa-dri
 libglew-dev
+libglfw-dev
 libglm-dev
 libglm-dev
 libntl-dev
