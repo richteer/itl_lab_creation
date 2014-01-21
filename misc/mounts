@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Mount .Home" >&2
+mount /.home
+echo "Mount Home" >&2
+mount /home
+echo "Mount storage" >&2
+mount /storage
+
+exit 0
