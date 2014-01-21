@@ -204,6 +204,7 @@ function setup_users() {
 	f_chroot "usermod -a -G libvirt $user"
 	f_chroot "usermod -a -G libvirt-qemu $user"
 	f_chroot "usermod -a -G vboxusers $user"
+	f_chroot "usermod -a -G video $user"
 	echo -e "$userpass\n$userpass" | o_chroot passwd $user
 	echo -e "$rootpass\n$rootpass" | o_chroot passwd root
 	
