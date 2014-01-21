@@ -382,6 +382,9 @@ function setup_misc() {
 	rm $rt/opt/firefox/browser/searchplugins/*
 	cp misc/google.xml $rt/opt/firefox/browser/searchplugins/
 	cp -rv etc $rt
+	mkdir $rt/etc/systemd/system/local-fs.target.wants/
+	ln -s /etc/systemd/system/mounter.service $rt/etc/systemd/system/local-fs.target.wants/
+	cp misc/mounts $rt/usr/local/bin/
 }
 
 function setup_vmware() {
