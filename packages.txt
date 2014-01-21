@@ -1,2 +1,3 @@
 eclipse netbeans libreoffice firmware-linux firmware-linux-nonfree ocaml libcv-dev virtualbox-dkms flashplugin-nonfree
-firefox firefox-l10n-en-us virtualbox-qt mint-x-icons debootstrap libreoffice-gnome libreoffice-gtk3 ntfs-3g
+firefox firefox-l10n-en-us virtualbox-qt mint-x-icons debootstrap
+libreoffice-gnome libreoffice-gtk3 ntfs-3g bsdgames-nonfree
