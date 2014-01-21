@@ -58,7 +58,6 @@ libopenmpi-dev
 libsdl2-dev
 libtool
 libva-intel-vaapi-driver
-libva-intel-vaapi-driver
 libvirt-bin
 linux-image-amd64
 llvm
