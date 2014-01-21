@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sleep 0.5
+
 echo "Mount .Home" >&2
 mount /.home
 echo "Mount Home" >&2
