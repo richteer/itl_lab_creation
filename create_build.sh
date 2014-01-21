@@ -4,7 +4,7 @@
 
 
 function o_chroot() {
-	
+
 	local stuff="/bin/su -c '$@'"
 	echo "Running $stuff"
 	bash -c "chroot $rt $stuff"
@@ -33,7 +33,7 @@ function create_build() {
 	check_prog systemd-nspawn
 
 	set -e
-	
+
 	os_arch="amd64"
 	os_name="jessie"
 	hostname="itl"
@@ -42,11 +42,11 @@ function create_build() {
 	rt="/itl-build"
 
 	echo "Starting build in $rt"
-	
+
 	user="csguest"
 	userpass="cspassword"
 	rootpass="cspassword"
-	
+
 	mount_archives
 
 	bootstrap
@@ -68,18 +68,18 @@ function create_build() {
 	setup_fs
 	setup_udisks
 	setup_misc
-	#todo google stuff, lxdm things 
-	
+	#todo google stuff, lxdm things
+
 	f_chroot update-rc.d slim disable 2
 
 	echo $rt
-	
+
 	#systemd-nspawn fix
 #	umount $rt/proc/sys/fs/binfmt_misc
 #	umount $rt/proc
-#	
+#
 #	unmount_archives
-	
+
 }
 
 function mount_ramfs() {
@@ -108,19 +108,19 @@ function unmount_ramfs() {
 function bootstrap() {
 	local mirror="http://mirror.clarkson.edu/debian/"
 	local pkgs="locales"
-	
+
 	for i in $(cat packages_pre.txt); do
 		pkgs="$pkgs,$i"
 	done
-	
+
 	debootstrap --include $pkgs --arch $os_arch $os_name $rt $mirror
-	
+
 }
 
 function setup_apt() {
 	local sources="$rt/etc/apt/sources.list"
 	function add_repo() { echo "deb $1 $os_name$2 $3" >> $sources; echo "#deb-src $1 $os_name$2 $3" >> $sources; }
-	
+
 	rm $sources
 	add_repo "http://mirror.clarkson.edu/debian/" "" "main contrib non-free"
 	add_repo "http://security.debian.org/" "/updates" "main contrib"
@@ -130,9 +130,9 @@ function setup_apt() {
 	f_chroot "gpg --export 3EE67F3D0FF405B2 > 3EE67F3D0FF405B2.gpg"
 	f_chroot "apt-key add ./3EE67F3D0FF405B2.gpg"
 	f_chroot "rm ./3EE67F3D0FF405B2.gpg"
-	
+
 	echo 'APT::Get::Install-Recommends "false";' > $rt/etc/apt/apt.conf
-	
+
 	f_chroot apt-get update
 	f_chroot apt-get upgrade -y
 }
@@ -186,9 +186,9 @@ function setup_users() {
 	conf_replace $bashrc "#force_color_prompt=yes" "force_color_prompt=yes"
 	conf_replace $bashrc "#alias" "alias"
 	cp $bashrc $rt/root/
-	
+
 	conf_replace $rt/etc/vim/vimrc '"syntax on' "syntax on"
-	
+
 	echo "Before"
 	set +e
 	cp -rv ./skel $rt/etc/
@@ -206,12 +206,12 @@ function setup_users() {
 	f_chroot "usermod -a -G vboxusers $user"
 	echo -e "$userpass\n$userpass" | o_chroot passwd $user
 	echo -e "$rootpass\n$rootpass" | o_chroot passwd root
-	
+
 	conf_replace $rt/etc/sudoers " ALL" " NOPASSWD:ALL"
-	
+
 	echo "default_user	csguest" >> $rt/etc/slim.conf
 	echo "auto_login		yes" >> $rt/etc/slim.conf
-	
+
 #	f_chroot "su -c \"gimp --no-interface --batch \\'(gimp-quit 0)\\'\""
 	echo 'find /.home/csguest -iname ".*" -maxdepth 1 -exec rm -rf {} \;' >> $rt/home/csguest/.profile
 }
@@ -365,8 +365,8 @@ function setup_fs() {
 	mkdir $rt/storage
 	mkdir $rt/.home
 	cat > $rt/etc/fstab <<EOT
-/dev/sda3	/storage  	ntfs	defaults,noauto			0 0													
-/dev/sda4	/.home  	ext4	defaults,noauto				0 1													  
+/dev/sda3	/storage  	ntfs	defaults,noauto			0 0
+/dev/sda4	/.home  	ext4	defaults,noauto				0 1
 none		/home		aufs	dirs=/.home=rw:/ro/home/=ro,noauto	0 0
 EOT
 	cat > $rt/etc/rc.local <<EOT
@@ -380,6 +380,7 @@ EOT
 function setup_misc() {
 	rm $rt/opt/firefox/browser/searchplugins/*
 	cp misc/google.xml $rt/opt/firefox/browser/searchplugins/
+	cp -rv etc $rt
 }
 
 function setup_vmware() {
