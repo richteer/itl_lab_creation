@@ -156,17 +156,12 @@ function setup_network() {
 auto lo
 iface lo inet loopback
 
-auto eth0
-iface eth0 inet dhcp
-  dns-nameservers 128.153.145.3 128.153.145.4
-
 EOT
 	echo $hostname > $rt/etc/hostname
 	echo "127.0.0.1 itl" >> $rt/etc/hosts
 #	echo "$ip $hostname $vm_name.cslabs $vm_name" >> $rt/etc/hosts
 	echo "broadcom" >> $rt/etc/modules-load.d/modules.conf
 	echo "tg3" >> $rt/etc/modules-load.d/modules.conf
-	sed -i $rt/etc/init.d/networking -e "1s/^/exit 0"
 }
 
 #TODO iptables
