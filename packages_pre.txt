@@ -70,6 +70,7 @@ nmap
 nmon
 ntp
 octave
+pciutils
 plymouth
 plymouth-themes-all
 python-numpy
@@ -93,6 +94,7 @@ tmux
 totem
 traceroute
 unzip
+usbutils
 util-linux
 valgrind
 vim
