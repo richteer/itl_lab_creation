@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<channel name="keyboards" version="1.0">
+  <property name="Default" type="empty">
+    <property name="RestoreNumlock" type="bool" value="false"/>
+  </property>
+</channel>
+root@atlas:/foo/rw/home/csguest/.config/xfce4# cat xfconf/xfce-perchannel-xml/
+keyboards.xml                 xfce4-keyboard-shortcuts.xml  
+xfce4-appfinder.xml           xfce4-panel.xml               
+root@atlas:/foo/rw/home/csguest/.config/xfce4# cat xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml 
+<?xml version="1.0" encoding="UTF-8"?>
+
 <channel name="xfce4-keyboard-shortcuts" version="1.0">
   <property name="commands" type="empty">
     <property name="default" type="empty">
@@ -18,12 +29,14 @@
       <property name="XF86Mail" type="empty"/>
     </property>
     <property name="custom" type="empty">
+      <property name="&lt;Alt&gt;F3" type="string" value="xfce4-appfinder"/>
+      <property name="&lt;Alt&gt;F2" type="string" value="xfce4-appfinder --collapsed"/>
       <property name="XF86Display" type="string" value="xfce4-display-settings --minimal"/>
-      <property name="&lt;Super&gt;p" type="string" value="xfce4-display-settings --minimal"/>
-      <property name="&lt;Primary&gt;&lt;Alt&gt;Delete" type="string" value="xflock4"/>
-      <property name="&lt;Primary&gt;Escape" type="string" value="xfdesktop --menu"/>
-      <property name="&lt;Alt&gt;F2" type="string" value="xfrun4"/>
       <property name="override" type="bool" value="true"/>
+      <property name="&lt;Primary&gt;&lt;Alt&gt;t" type="string" value="xfce4-terminal"/>
+      <property name="&lt;Primary&gt;Escape" type="string" value="xfce4-popup-applicationsmenu"/>
+      <property name="&lt;Super&gt;p" type="string" value="xfce4-display-settings --minimal"/>
+      <property name="Print" type="string" value="xfce4-screenshooter"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
@@ -134,9 +147,12 @@
       <property name="&lt;Control&gt;F1" type="string" value="workspace_1_key"/>
       <property name="&lt;Control&gt;F11" type="string" value="workspace_11_key"/>
       <property name="override" type="bool" value="true"/>
-      <property name="&lt;Super&gt;Up" type="string" value="maximize_window_key"/>
       <property name="&lt;Super&gt;Left" type="string" value="tile_left_key"/>
       <property name="&lt;Super&gt;Right" type="string" value="tile_right_key"/>
+      <property name="&lt;Super&gt;Up" type="string" value="maximize_window_key"/>
+      <property name="&lt;Super&gt;Down" type="string" value="shade_window_key"/>
+      <property name="&lt;Alt&gt;&lt;Super&gt;Up" type="string" value="tile_up_key"/>
+      <property name="&lt;Alt&gt;&lt;Super&gt;Down" type="string" value="tile_down_key"/>
     </property>
   </property>
   <property name="providers" type="array">
