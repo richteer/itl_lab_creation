@@ -66,6 +66,7 @@ mercurial
 mit-scheme
 mysql-client
 mysql-workbench
+netcat
 nmap
 nmon
 ntp
