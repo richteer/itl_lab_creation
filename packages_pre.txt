@@ -18,6 +18,7 @@ cmake
 codeblocks
 cowsay
 curl
+dnsmasq
 ddd
 ddd
 dia
@@ -91,6 +92,7 @@ systemd
 sysvinit
 telnet
 texmaker
+texlive
 tmux
 totem
 traceroute
