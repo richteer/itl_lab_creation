@@ -81,6 +81,7 @@ qemu-kvm
 qtoctave
 racket
 rsync
+rxvt-unicode-256color
 screen
 slim
 sqlite3
@@ -106,6 +107,7 @@ virt-manager
 vlc
 wget
 wireshark
+x11-xserver-utils
 xchat
 xfce4
 xfce4-goodies
