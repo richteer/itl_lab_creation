@@ -85,6 +85,7 @@ screen
 slim
 sqlite3
 ssh
+ssh-askpass
 strace
 subversion
 sudo
